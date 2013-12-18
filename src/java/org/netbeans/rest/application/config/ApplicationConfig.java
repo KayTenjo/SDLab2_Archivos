@@ -35,6 +35,7 @@ public class ApplicationConfig extends Application {
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(restBeans.testService.class);
+        resources.add(restBeans.uploadService.class);
     }
     
 }
