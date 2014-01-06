@@ -4,9 +4,10 @@
  */
 package restBeans;
 
+
 import com.google.gson.Gson;
-import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+import com.sun.jersey.core.util.Base64;
+import entity.Archivo;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,6 +16,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import javaClasses.subirArchivo;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -30,10 +33,15 @@ import javax.ws.rs.core.MediaType;
 
 public class uploadService {
     
+    private String puerto="8080";
+    
+    @PersistenceContext(unitName = "SDLab2_ArchivosPU")
+    private EntityManager em;
+    
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public String subirArchivo(final String input) throws Base64DecodingException {
+   
+    public String subirArchivo(final String input) {
       
         Gson gson = new Gson();
         subirArchivo objeto = gson.fromJson(input, subirArchivo.class);
@@ -42,15 +50,16 @@ public class uploadService {
         
         byte[] decode = Base64.decode(objeto.getArchivo());
         InputStream myInputStream = new ByteArrayInputStream(decode); 
-        String uploadedFileLocation = "C:\\uploaded\\" + objeto.getNombre_virtual() ;
+        String uploadedFileLocation = "C:\\uploaded\\" + objeto.getNombre_real();
  
 		// save it
-		writeToFile(myInputStream, uploadedFileLocation);
- 
+        writeToFile(myInputStream, uploadedFileLocation);
+        String url = generarURL(objeto.getUsuario(),objeto.getNombre_virtual());
+        saveToBD(objeto.getUsuario(), objeto.getNombre_real(), objeto.getNombre_virtual(),url);
         
         System.out.println("Subi el archivo yey ");
 		
-         return input;
+         return "oli";
 
 	}
  
@@ -76,7 +85,32 @@ public class uploadService {
 		}
  
 	}
+        
+        private void saveToBD(String usuario,String nombre_real, String nombre_virtual, String url){
+        
+        Archivo archivo = new Archivo();
+        archivo.setArchivoUsuario(usuario);
+        archivo.setArchivoNombreFisico(nombre_real);
+        archivo.setArchivoNombreVirtual(nombre_virtual);
+        archivo.setArchivoUrl(url);
+        
+        persist(archivo);
+        }
+        
+         private String generarURL(String usuario, String archivo) {
+             
+             String url = "http://localhost:" + puerto + "/SDLab2_Archivos/webresources/download/" + usuario + "/" +archivo;
+             System.out.println(url);
+             return url;
+        
     }
+    
+
+    public void persist(Object object) {
+        em.persist(object);
+    }
+}
+   
      
     
     

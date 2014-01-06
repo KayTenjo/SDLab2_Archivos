@@ -34,6 +34,8 @@ public class ApplicationConfig extends Application {
      * given list with all resources defined in the project.
      */
     private void addRestResourceClasses(Set<Class<?>> resources) {
+        resources.add(restBeans.downloadService.class);
+        resources.add(restBeans.showFilesService.class);
         resources.add(restBeans.testService.class);
         resources.add(restBeans.uploadService.class);
     }

@@ -30,7 +30,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Archivo.findByArchivoId", query = "SELECT a FROM Archivo a WHERE a.archivoId = :archivoId"),
     @NamedQuery(name = "Archivo.findByArchivoNombreVirtual", query = "SELECT a FROM Archivo a WHERE a.archivoNombreVirtual = :archivoNombreVirtual"),
     @NamedQuery(name = "Archivo.findByArchivoNombreFisico", query = "SELECT a FROM Archivo a WHERE a.archivoNombreFisico = :archivoNombreFisico"),
-    @NamedQuery(name = "Archivo.findByArchivoUsuario", query = "SELECT a FROM Archivo a WHERE a.archivoUsuario = :archivoUsuario")})
+    @NamedQuery(name = "Archivo.findByArchivoUsuario", query = "SELECT a FROM Archivo a WHERE a.archivoUsuario = :archivoUsuario"),
+    @NamedQuery(name = "Archivo.findByArchivoUrl", query = "SELECT a FROM Archivo a WHERE a.archivoUrl = :archivoUrl"),
+    @NamedQuery(name ="Archivo.findByArchivoUsuarioAndArchivoNombreVirtual",query = "SELECT a FROM Archivo a WHERE a.archivoUsuario = :archivoUsuario AND a.archivoNombreVirtual = :archivoNombreVirtual" )})
 public class Archivo implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -53,6 +55,9 @@ public class Archivo implements Serializable {
     @Size(min = 1, max = 256)
     @Column(name = "archivo_usuario")
     private String archivoUsuario;
+    @Size(max = 256)
+    @Column(name = "archivo_url")
+    private String archivoUrl;
 
     public Archivo() {
     }
@@ -98,6 +103,14 @@ public class Archivo implements Serializable {
 
     public void setArchivoUsuario(String archivoUsuario) {
         this.archivoUsuario = archivoUsuario;
+    }
+
+    public String getArchivoUrl() {
+        return archivoUrl;
+    }
+
+    public void setArchivoUrl(String archivoUrl) {
+        this.archivoUrl = archivoUrl;
     }
 
     @Override

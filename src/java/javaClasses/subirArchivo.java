@@ -17,6 +17,7 @@ import java.io.InputStream;
 public class subirArchivo {
     
     private String nombre_virtual;
+    private String nombre_real;
     private String usuario;
     private String archivo;
 
@@ -42,6 +43,14 @@ public class subirArchivo {
 
     public void setArchivo(String archivo) {
         this.archivo = archivo;
+    }
+
+    public String getNombre_real() {
+        return nombre_real;
+    }
+
+    public void setNombre_real(String nombre_real) {
+        this.nombre_real = nombre_real;
     }
 
   
